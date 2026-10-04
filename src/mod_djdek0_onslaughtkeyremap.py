@@ -461,31 +461,187 @@ def _poll(token):
     _schedule_poll()
 
 
+# --- Localization --------------------------------------------------------
+
+# 语言代码 -> 文案表。加语言就往下加一项即可。
+# key 用 WoT 客户端的语言码：zh / zh_tw / en / ru / ja / ko ...
+_TRANSLATIONS = {
+    'en': {
+        'mod_display_name': 'Onslaught Key Remap',
+        'slot7_text': 'Tank Ability',
+        'slot7_tooltip': '{HEADER}Tank Ability{/HEADER}{BODY}Physical key used to trigger the Onslaught tank ability. This skill is usually bound to consumable slot 7.{/BODY}',
+        'slot8_text': 'Artillery Strike',
+        'slot8_tooltip': '{HEADER}Artillery Strike{/HEADER}{BODY}Physical key used to call the Onslaught artillery strike. This skill is usually bound to consumable slot 8.{/BODY}',
+        'slot9_text': 'Radio / Signal Flare',
+        'slot9_tooltip': '{HEADER}Radio{/HEADER}{BODY}Physical key used to trigger the Onslaught radio / signal flare. This skill is usually bound to consumable slot 9.{/BODY}',
+        'apply_in_training_text': 'Apply in Training Rooms',
+        'apply_in_training_tooltip': '{HEADER}Apply in Training Rooms{/HEADER}{BODY}When checked, this override is also applied in all training rooms.{/BODY}',
+    },
+    'zh_cn': {
+        'mod_display_name': '天梯按键重映射',
+        'slot7_text': '坦克特殊能力',
+        'slot7_tooltip': '{HEADER}坦克特殊能力{/HEADER}{BODY}用于选择天梯模式坦克技能的物理按键，该技能通常对应消耗品槽位 7。{/BODY}',
+        'slot8_text': '火炮打击',
+        'slot8_tooltip': '{HEADER}火炮打击{/HEADER}{BODY}用于选择天梯模式火炮打击技能的物理按键，该技能通常对应消耗品槽位 8。{/BODY}',
+        'slot9_text': '无线电台/信号弹',
+        'slot9_tooltip': '{HEADER}无线电台{/HEADER}{BODY}用于选择天梯模式无线电台/信号弹技能的物理按键，该技能通常对应消耗品槽位 9。{/BODY}',
+        'apply_in_training_text': '在训练房中应用',
+        'apply_in_training_tooltip': '{HEADER}在训练房中应用{/HEADER}{BODY}选中后，该覆盖设置也将应用于所有训练房。{/BODY}',
+    },
+    'zh_tw': {
+        'mod_display_name': '天梯按鍵重對應',
+        'slot7_text': '戰車特殊能力',
+        'slot7_tooltip': '{HEADER}戰車特殊能力{/HEADER}{BODY}用於選擇天梯模式戰車技能的實體按鍵，該技能通常對應消耗品槽位 7。{/BODY}',
+        'slot8_text': '火砲打擊',
+        'slot8_tooltip': '{HEADER}火砲打擊{/HEADER}{BODY}用於選擇天梯模式火砲打擊技能的實體按鍵，該技能通常對應消耗品槽位 8。{/BODY}',
+        'slot9_text': '無線電/信號彈',
+        'slot9_tooltip': '{HEADER}無線電{/HEADER}{BODY}用於選擇天梯模式無線電/信號彈技能的實體按鍵，該技能通常對應消耗品槽位 9。{/BODY}',
+        'apply_in_training_text': '在訓練房中套用',
+        'apply_in_training_tooltip': '{HEADER}在訓練房中套用{/HEADER}{BODY}勾選後，該覆寫設定也將套用於所有訓練房。{/BODY}',
+    },
+    'ru': {
+        'mod_display_name': 'Переназначение клавиш Натиска',
+        'slot7_text': 'Спецспособность танка',
+        'slot7_tooltip': '{HEADER}Спецспособность танка{/HEADER}{BODY}Физическая клавиша для активации спецспособности танка в Натиске. Обычно привязана к слоту расходников 7.{/BODY}',
+        'slot8_text': 'Артудар',
+        'slot8_tooltip': '{HEADER}Артудар{/HEADER}{BODY}Физическая клавиша для вызова артудара в Натиске. Обычно привязана к слоту расходников 8.{/BODY}',
+        'slot9_text': 'Рация / Сигнальная ракета',
+        'slot9_tooltip': '{HEADER}Рация{/HEADER}{BODY}Физическая клавиша для запуска рации / сигнальной ракеты в Натиске. Обычно привязана к слоту расходников 9.{/BODY}',
+        'apply_in_training_text': 'Применять в тренировочных боях',
+        'apply_in_training_tooltip': '{HEADER}Применять в тренировочных боях{/HEADER}{BODY}Если включено, переопределение клавиш также применяется во всех тренировочных боях.{/BODY}',
+    },
+    'ja': {
+        'mod_display_name': 'オンsロート キー再割り当て',
+        'slot7_text': '戦車特殊能力',
+        'slot7_tooltip': '{HEADER}戦車特殊能力{/HEADER}{BODY}オンsロートの戦車特殊能力を発動する物理キー。通常は消耗品スロット 7 に対応します。{/BODY}',
+        'slot8_text': '砲撃',
+        'slot8_tooltip': '{HEADER}砲撃{/HEADER}{BODY}オンsロートの砲撃を要請する物理キー。通常は消耗品スロット 8 に対応します。{/BODY}',
+        'slot9_text': '無線 / 信号弾',
+        'slot9_tooltip': '{HEADER}無線{/HEADER}{BODY}オンsロートの無線 / 信号弾を発動する物理キー。通常は消耗品スロット 9 に対応します。{/BODY}',
+        'apply_in_training_text': '訓練部屋でも適用',
+        'apply_in_training_tooltip': '{HEADER}訓練部屋でも適用{/HEADER}{BODY}チェックすると、この上書き設定はすべての訓練部屋にも適用されます。{/BODY}',
+    },
+    'ko': {
+        'mod_display_name': '결전 키 재매핑',
+        'slot7_text': '전차 특수 능력',
+        'slot7_tooltip': '{HEADER}전차 특수 능력{/HEADER}{BODY}결전 모드의 전차 특수 능력을 발동하는 물리 키입니다. 보통 소모품 슬롯 7에 대응합니다.{/BODY}',
+        'slot8_text': '포격 지원',
+        'slot8_tooltip': '{HEADER}포격 지원{/HEADER}{BODY}결전 모드의 포격 지원을 요청하는 물리 키입니다. 보통 소모품 슬롯 8에 대응합니다.{/BODY}',
+        'slot9_text': '무전기 / 신호탄',
+        'slot9_tooltip': '{HEADER}무전기{/HEADER}{BODY}결전 모드의 무전기 / 신호탄을 발동하는 물리 키입니다. 보통 소모품 슬롯 9에 대응합니다.{/BODY}',
+        'apply_in_training_text': '훈련장에도 적용',
+        'apply_in_training_tooltip': '{HEADER}훈련장에도 적용{/HEADER}{BODY}체크하면 이 재정의 설정이 모든 훈련장에도 적용됩니다.{/BODY}',
+    },
+}
+
+_DEFAULT_LANGUAGE = 'en'
+
+
+def _get_client_language():
+    """尽力探测客户端语言代码（小写，下划线分隔）。探测不到返回空串。"""
+    # 1) 官方 helper（新客户端）
+    try:
+        from helpers import getClientLanguage
+        lang = getClientLanguage()
+        if lang:
+            return str(lang).lower().replace('-', '_')
+    except Exception:
+        pass
+
+    # 2) settings 里的常见字段
+    try:
+        import settings
+        for attr in ('g_clientLocale', 'g_clientLanguage', 'g_language'):
+            lang = getattr(settings, attr, None)
+            if lang:
+                return str(lang).lower().replace('-', '_')
+    except Exception:
+        pass
+
+    # 3) BigWorld
+    try:
+        import BigWorld
+        getter = getattr(BigWorld, 'getLanguage', None)
+        if getter is not None:
+            lang = getter()
+            if lang:
+                return str(lang).lower().replace('-', '_')
+    except Exception:
+        pass
+
+    # 4) 区域常量兜底
+    try:
+        from constants import IS_CHINA, IS_KOREA, IS_JAPAN
+        if IS_CHINA:
+            return 'zh'
+        if IS_KOREA:
+            return 'ko'
+        if IS_JAPAN:
+            return 'ja'
+    except Exception:
+        pass
+
+    return ''
+
+
+def _resolve_language_table(lang):
+    """把客户端返回的语言代码归一到 _TRANSLATIONS 里存在的 key。"""
+    if not lang:
+        return _TRANSLATIONS[_DEFAULT_LANGUAGE]
+
+    # 精确命中（zh_cn / zh_tw / en / ru / ja / ko 等）
+    if lang in _TRANSLATIONS:
+        return _TRANSLATIONS[lang]
+
+    # 把连字符统一成下划线，再试一次（zh-CN -> zh_cn）
+    normalized = lang.replace('-', '_').lower()
+    if normalized in _TRANSLATIONS:
+        return _TRANSLATIONS[normalized]
+
+    # 中文变体归并：zh_hant* / zh_tw / zh_hk -> zh_tw；其余 zh_* -> zh_cn
+    if normalized.startswith('zh'):
+        if 'hant' in normalized or 'tw' in normalized or 'hk' in normalized:
+            return _TRANSLATIONS.get('zh_tw', _TRANSLATIONS[_DEFAULT_LANGUAGE])
+        return _TRANSLATIONS.get('zh_cn', _TRANSLATIONS[_DEFAULT_LANGUAGE])
+
+    # 其他语言取主语言码兜底（es_ar -> es，pt_br -> pt，但表里没 es/pt 就回落英语）
+    base = normalized.split('_')[0]
+    if base in _TRANSLATIONS:
+        return _TRANSLATIONS[base]
+
+    return _TRANSLATIONS[_DEFAULT_LANGUAGE]
+
+def _t(key):
+    """取当前语言下 key 对应的文案；缺 key 时回落英语，再缺就返回 key 本身。"""
+    table = _resolve_language_table(_get_client_language())
+    if key in table:
+        return table[key]
+    return _TRANSLATIONS[_DEFAULT_LANGUAGE].get(key, key)
 # --- Runtime helpers: settings panel (ModsSettingsAPI) --------------------
 
 def _build_settings_template():
     return {
-        'modDisplayName': 'Onslaught Key Remap',
+        'modDisplayName': _t('mod_display_name'),
         'enabled': True,
         'column1': [
             {
                 'type': 'HotKey',
-                'text': 'Tank special ability',
-                'tooltip': '{HEADER}Tank special ability{/HEADER}{BODY}Physical key that selects Onslaught tank ability usually occupied by Consumable 7.{/BODY}',
+                'text': _t('slot7_text'),
+                'tooltip': _t('slot7_tooltip'),
                 'value': _settings['slot7Key'],
                 'varName': 'slot7Key',
             },
             {
                 'type': 'HotKey',
-                'text': 'Artilery strike',
-                'tooltip': '{HEADER}Artilery strike{/HEADER}{BODY}Physical key that selects Onslaught artilery strike ability usually occupied by Consumable 8.{/BODY}',
+                'text': _t('slot8_text'),
+                'tooltip': _t('slot8_tooltip'),
                 'value': _settings['slot8Key'],
                 'varName': 'slot8Key',
             },
             {
                 'type': 'HotKey',
-                'text': 'Radio/Flare',
-                'tooltip': '{HEADER}Radio{/HEADER}{BODY}Physical key that selects Onslaught radio/flare ability usually occupied by Consumable 9.{/BODY}',
+                'text': _t('slot9_text'),
+                'tooltip': _t('slot9_tooltip'),
                 'value': _settings['slot9Key'],
                 'varName': 'slot9Key',
             },
@@ -493,8 +649,8 @@ def _build_settings_template():
         'column2': [
             {
                 'type': 'CheckBox',
-                'text': 'Apply in training rooms',
-                'tooltip': '{HEADER}Apply in training rooms{/HEADER}{BODY}When selected the override will be applied in all training rooms as well.{/BODY}',
+                'text': _t('apply_in_training_text'),
+                'tooltip': _t('apply_in_training_tooltip'),
                 'value': _settings.get('applyInTraining', False),
                 'varName': 'applyInTraining',
             },
